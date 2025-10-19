@@ -4,6 +4,9 @@ const app = express();
 
 app.use(express.urlencoded({ extended: false }));
 
+
+const port = process.env.PORT || 1337;
+
 let questions = [];
 let currentQuestion = '';
 let correctAnswer = '';
@@ -113,4 +116,4 @@ app.post('/gather', (req, res) => {
     res.send(twiml.toString());
 })
 
-app.listen(1337, () => console.log('Team Jens and Nico running on 1337'));
+app.listen(port, () => console.log('Team Jens and Nico running on 1337'));
