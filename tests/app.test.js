@@ -36,6 +36,33 @@ describe('Express app routes', () => {
     })
 
     it('POST /gather should respond with next question or game over', async () => {
-        
+        global.questions = [
+            { question: 'The sky is blue.', answer: '1' },
+            { question: '2 + 2 = 5', answer: '2' }
+        ]
+
+        const res = await request(app)
+            .post('/gather?q=0&score=0')
+            .send('Digits=1')
+            .expect('Content-Type', /xml/)
+            .expect(200)
+
+        expect(res.text).toContain('Correct!')
+        expect(res.text).toContain('Next question. Press 1 for True, or 2 for False')
     })
+
+    it('should end the game when all questions answered', async () => {
+        global.questions = [
+            { question: 'Only one question left.', answer: '1' }
+        ];
+
+        const res = await request(app)
+            .post('/gather?q=4&score=0')
+            .send('Digits=1')
+            .expect('Content-Type', /xml/)
+            .expect(200)
+
+        expect(res.text).toContain('Game over!');
+        expect(res.text).toContain('Thanks for playing Team Jens and Nico\'s Trivia!')
+    });
 })
