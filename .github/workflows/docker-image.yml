@@ -29,7 +29,8 @@ jobs:
         id: tag
         run: |
           DATE=$(date +'%Y-%m-%d')
-          TAG="prod-${DATE}"
+          SHA=$(git rev-parse --short HEAD)
+          TAG="prod-${DATE}-${SHA}"
           echo "Tagging commit with $TAG"
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
