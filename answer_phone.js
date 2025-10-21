@@ -48,6 +48,7 @@ async function getFiveQuestion() {
         // return currentQuestion;
     } catch (error) {
         console.error(error.message);
+        return []
     }
 
 
@@ -104,7 +105,7 @@ app.post('/gather', (req, res) => {
 
         gather.say("Next question. Press 1 for True, or 2 for False.");
         gather.say(questions[qIndex].question);
-        
+
         twiml.redirect(`/gather?q=${qIndex}&score=${score}`);
     } else {
         twiml.say(`Game over! You scored ${score} points out of 5 questions. `);
@@ -116,4 +117,10 @@ app.post('/gather', (req, res) => {
     res.send(twiml.toString());
 })
 
-app.listen(port, () => console.log('Team Jens and Nico running on 1337'));
+export default app;
+export { getFiveQuestion };
+if (require.main === module) {
+    const port = process.env.PORT || 1337;
+    app.listen(port, () => console.log(`'Team Jens and Nico running on ${port}'`));
+}
+
