@@ -1,0 +1,37 @@
+name: Docker Build and Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build Docker image
+        run: docker build -t twillio-trillio:latest .
+
+      - name: Run container to verify it works
+        run: docker run --rm twillio-trillio:latest
+
+      - name: Create production tag
+        id: tag
+        run: |
+          DATE=$(date +'%Y-%m-%d')
+          TAG="prod-${DATE}"
+          echo "Tagging commit with $TAG"
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag $TAG
+          git push origin $TAG
